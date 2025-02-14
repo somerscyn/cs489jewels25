@@ -9,8 +9,8 @@ function Background:init(imgPath, speed)
 end
 
 function Background:draw()
-    love.graphics.draw(self.img,0-self.pos,0)
-    love.graphics.draw(self.img,self.width-self.pos,0)    
+    love.graphics.draw(self.img,math.floor(0-self.pos),0)
+    love.graphics.draw(self.img,math.floor(self.width-self.pos),0)    
 end
 
 function Background:update(dt)
