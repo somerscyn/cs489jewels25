@@ -2,6 +2,8 @@ local Globals = require "src.Globals"
 local Push = require "libs.push"
 local Background = require "src.game.Background"
 local Gem = require "src.game.Gem"
+local Board = require "src.game.Board"
+local Border = require "src.game.Border"
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -16,6 +18,9 @@ function love.load()
 
     gem1 = Gem(100,50,5)
     gem2 = Gem(500,50,6)
+
+    board = Board(140,80)
+    border = Border(110,50,380,380)
 end
 
 -- When the game window resizes
@@ -45,8 +50,16 @@ function love.update(dt)
     bg1:update(dt)
     bg2:update(dt)
 
-    gem1:update(dt)
-    gem2:update(dt)
+    if gameState == "start" then
+
+        gem1:update(dt)
+        gem2:update(dt)
+    elseif gameState == "play" then
+        board:update(dt)
+
+    elseif gameState == "over" then
+        -- for later, if we needed
+    end
 end
 
 -- Draws the game after the update
@@ -79,8 +92,13 @@ function drawStartState()
 end
 
 function drawPlayState()
-    love.graphics.printf("Play",titleFont,0,50,
-    gameWidth,"center")
+    bg1:draw()
+    bg2:draw()
+
+    board:draw()
+
+    border:draw()
+
 end
 
 function drawGameOverState()
