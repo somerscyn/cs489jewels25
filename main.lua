@@ -41,8 +41,10 @@ end
 
 -- Event to handle mouse pressed (there is another for mouse release)
 function love.mousepressed(x, y, button, istouch)
-    gx, gy = Push:toGame(x,y)
-
+    local gx, gy = Push:toGame(x,y)
+    if button == 1 then -- regurlar mouse click
+        board:mousepressed(gx,gy)
+    end
 end
 
 -- Update is executed each frame, dt is delta time (a fraction of a sec)

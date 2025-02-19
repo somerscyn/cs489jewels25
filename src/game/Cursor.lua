@@ -21,8 +21,25 @@ function Cursor:getFrame(frow, fcol)
 end
 
 function Cursor:draw()
-    love.graphics.draw(spriBorder, self.frame, 
-        self.x, self.y, 0, self.scale, self.scale)
+    if self.row > 0 and self.col > 0 then
+        love.graphics.draw(spriBorder, self.frame, 
+            self.x, self.y, 0, self.scale, self.scale)
+    end -- end if
+end
+
+function Cursor:setCoords(x,y)
+    self.x = x
+    self.y = y
+end
+
+function Cursor:setMatrixCoords(row,col)
+    self.row = row
+    self.col = col
+end
+
+function Cursor:clear()
+    self.row = 0
+    self.col = 0
 end
 
 return Cursor

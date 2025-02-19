@@ -49,4 +49,50 @@ function Board:draw()
     self.cursor:draw()
 end
 
+function Board:mousepressed(x,y)
+    if x > self.x and y > self.y 
+       and x < self.x+Board.MAXCOLS*Board.TILESIZE
+       and y < self.y+Board.MAXROWS*Board.TILESIZE then
+        -- Click inside the board coords
+        local row, col = self:convertPixelToMatrix(x,y)
+
+        if self.cursor.row == row and self.cursor.col == col then
+            self.cursor:clear()
+        elseif self:isAdjacentToCursor(row,col) then
+            local temp = self.tiles[row][col]
+            local tx = self.tiles[row][col].x
+            local ty = self.tiles[row][col].y
+
+            self.tiles[row][col].x = self.tiles[self.cursor.row][self.cursor.col].x
+            self.tiles[row][col].y = self.tiles[self.cursor.row][self.cursor.col].y
+            self.tiles[row][col] = self.tiles[self.cursor.row][self.cursor.col]
+
+            self.tiles[self.cursor.row][self.cursor.col].x = tx
+            self.tiles[self.cursor.row][self.cursor.col].y = ty
+            self.tiles[self.cursor.row][self.cursor.col] = temp
+
+        else
+            self.cursor:setCoords(self.x+(col-1)*Board.TILESIZE,
+                    self.y+(row-1)*Board.TILESIZE)
+            self.cursor:setMatrixCoords(row,col)
+        end
+    
+    end -- end if
+
+end
+
+function Board:isAdjacentToCursor(row,col)
+    local adjCol = self.cursor.row == row 
+       and (self.cursor.col == col+1 or self.cursor.col == col-1)
+    local adjRow = self.cursor.col == col 
+       and (self.cursor.row == row+1 or self.cursor.row == row-1)
+    return adjCol or adjRow
+end
+
+function Board:convertPixelToMatrix(x,y)
+    local col = 1+math.floor((x-self.x)/Board.TILESIZE)
+    local row = 1+math.floor((y-self.y)/Board.TILESIZE)
+    return row,col 
+end
+
 return Board

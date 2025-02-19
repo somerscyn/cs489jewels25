@@ -14,7 +14,7 @@ function Gem:init(x,y,type)
     self.type = type 
     if self.type == nil then self.type = 4 end
 
-    self.animation = Anim8.newAnimation(gridGem('1-4',self.type),0.2)
+    self.animation = Anim8.newAnimation(gridGem('1-4',self.type),0.25)
 end
 
 function Gem:update(dt)
