@@ -17,6 +17,17 @@ function Gem:init(x,y,type)
     self.animation = Anim8.newAnimation(gridGem('1-4',self.type),0.25)
 end
 
+function Gem:setType(type)
+    self.type = type
+    self.animation = Anim8.newAnimation(gridGem('1-4',self.type),0.25)
+end
+
+function Gem:nextType()
+    local newtype = self.type+1
+    if newtype > 8 then newtype = 4 end
+    self:setType(newtype)
+end
+
 function Gem:update(dt)
     self.animation:update(dt)
 end

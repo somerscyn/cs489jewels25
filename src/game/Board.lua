@@ -1,5 +1,6 @@
 local Class = require "libs.hump.class"
 local Matrix = require "libs.matrix"
+local Tween = require "libs.tween"
 
 local Gem = require "src.game.Gem"
 local Cursor = require "src.game.Cursor"
@@ -19,6 +20,9 @@ function Board:init(x,y)
             self.tiles[i][j] = self:createGem(i,j)
         end -- end for j
     end -- end for i
+
+    self.tweenGem1 = nil
+    self.tweenGem2 = nil
 end
 
 function Board:createGem(row,col)
@@ -35,6 +39,19 @@ function Board:update(dt)
             end -- end if
         end -- end for j
     end -- end for i
+
+    if self.tweenGem1 ~= nil and self.tweenGem2~=nil then
+        local completed1 = self.tweenGem1:update(dt)
+        local completed2 = self.tweenGem2:update(dt)
+        if completed1 and completed2 then
+            self.tweenGem1 = nil
+            self.tweenGem2 = nil
+            local temp = self.tiles[mouseRow][mouseCol]
+            self.tiles[mouseRow][mouseCol] = self.tiles[self.cursor.row][self.cursor.col]
+            self.tiles[self.cursor.row][self.cursor.col] = temp
+            self.cursor:clear()
+        end
+    end
 end
 
 function Board:draw()
@@ -49,32 +66,32 @@ function Board:draw()
     self.cursor:draw()
 end
 
+function Board:cheatGem(x,y)
+    if x > self.x and y > self.y 
+       and x < self.x+Board.MAXCOLS*Board.TILESIZE
+       and y < self.y+Board.MAXROWS*Board.TILESIZE then
+        -- Click inside the board coords
+        local cheatRow,cheatCol = self:convertPixelToMatrix(x,y)
+        self.tiles[cheatRow][cheatCol]:nextType()
+    end
+end
+
 function Board:mousepressed(x,y)
     if x > self.x and y > self.y 
        and x < self.x+Board.MAXCOLS*Board.TILESIZE
        and y < self.y+Board.MAXROWS*Board.TILESIZE then
         -- Click inside the board coords
-        local row, col = self:convertPixelToMatrix(x,y)
+        mouseRow, mouseCol = self:convertPixelToMatrix(x,y)
 
-        if self.cursor.row == row and self.cursor.col == col then
+        if self.cursor.row == mouseRow and self.cursor.col == mouseCol then
             self.cursor:clear()
-        elseif self:isAdjacentToCursor(row,col) then
-            local temp = self.tiles[row][col]
-            local tx = self.tiles[row][col].x
-            local ty = self.tiles[row][col].y
-
-            self.tiles[row][col].x = self.tiles[self.cursor.row][self.cursor.col].x
-            self.tiles[row][col].y = self.tiles[self.cursor.row][self.cursor.col].y
-            self.tiles[row][col] = self.tiles[self.cursor.row][self.cursor.col]
-
-            self.tiles[self.cursor.row][self.cursor.col].x = tx
-            self.tiles[self.cursor.row][self.cursor.col].y = ty
-            self.tiles[self.cursor.row][self.cursor.col] = temp
-
-        else
-            self.cursor:setCoords(self.x+(col-1)*Board.TILESIZE,
-                    self.y+(row-1)*Board.TILESIZE)
-            self.cursor:setMatrixCoords(row,col)
+        elseif self:isAdjacentToCursor(mouseRow,mouseCol) then
+            -- adjacent click, swap gems
+            self:tweenStartSwap(mouseRow,mouseCol,self.cursor.row,self.cursor.col)
+        else -- sets cursor to clicked place
+            self.cursor:setCoords(self.x+(mouseCol-1)*Board.TILESIZE,
+                    self.y+(mouseRow-1)*Board.TILESIZE)
+            self.cursor:setMatrixCoords(mouseRow,mouseCol)
         end
     
     end -- end if
@@ -93,6 +110,17 @@ function Board:convertPixelToMatrix(x,y)
     local col = 1+math.floor((x-self.x)/Board.TILESIZE)
     local row = 1+math.floor((y-self.y)/Board.TILESIZE)
     return row,col 
+end
+
+function Board:tweenStartSwap(row1,col1,row2,col2)
+    local x1 = self.tiles[row1][col1].x
+    local y1 = self.tiles[row1][col1].y
+
+    local x2 = self.tiles[row2][col2].x
+    local y2 = self.tiles[row2][col2].y
+
+    self.tweenGem1 = Tween.new(0.3,self.tiles[row1][col1],{x = x2, y = y2})
+    self.tweenGem2 = Tween.new(0.3,self.tiles[row2][col2],{x = x1, y = y1})
 end
 
 return Board

@@ -44,6 +44,8 @@ function love.mousepressed(x, y, button, istouch)
     local gx, gy = Push:toGame(x,y)
     if button == 1 then -- regurlar mouse click
         board:mousepressed(gx,gy)
+    elseif button == 2 and debugFlag then
+        board:cheatGem(gx,gy)
     end
 end
 
