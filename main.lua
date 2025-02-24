@@ -4,6 +4,7 @@ local Background = require "src.game.Background"
 local Gem = require "src.game.Gem"
 local Board = require "src.game.Board"
 local Border = require "src.game.Border"
+local Explosion = require "src.game.Explosion"
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -21,6 +22,8 @@ function love.load()
 
     board = Board(140,80)
     border = Border(110,50,380,380)
+
+    testexp = Explosion()
 end
 
 -- When the game window resizes
@@ -44,6 +47,8 @@ function love.mousepressed(x, y, button, istouch)
     local gx, gy = Push:toGame(x,y)
     if button == 1 then -- regurlar mouse click
         board:mousepressed(gx,gy)
+    elseif button == 2 and love.keyboard.isDown("lctrl","rctrl") then
+        testexp:trigger(gx,gy)
     elseif button == 2 and debugFlag then
         board:cheatGem(gx,gy)
     end
@@ -53,6 +58,7 @@ end
 function love.update(dt)
     bg1:update(dt)
     bg2:update(dt)
+    testexp:update(dt)
 
     if gameState == "start" then
 
@@ -77,6 +83,10 @@ function love.draw()
         drawPlayState()    
     elseif gameState == "over" then
         drawGameOverState()    
+    end
+
+    if testexp:isActive() then
+        testexp:draw()
     end
 
     Push:finish()

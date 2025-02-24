@@ -4,6 +4,7 @@ local Tween = require "libs.tween"
 
 local Gem = require "src.game.Gem"
 local Cursor = require "src.game.Cursor"
+local Explosion = require "src.game.Explosion"
 
 local Board = Class{}
 Board.MAXROWS = 8
@@ -24,6 +25,7 @@ function Board:init(x,y)
 
     self.tweenGem1 = nil
     self.tweenGem2 = nil
+    self.explosions = {}
 end
 
 function Board:createGem(row,col)
@@ -85,6 +87,7 @@ function Board:update(dt)
             self.tiles[mouseRow][mouseCol] = self.tiles[self.cursor.row][self.cursor.col]
             self.tiles[self.cursor.row][self.cursor.col] = temp
             self.cursor:clear()
+            self:matches()
         end
     end
 end
@@ -156,6 +159,70 @@ function Board:tweenStartSwap(row1,col1,row2,col2)
 
     self.tweenGem1 = Tween.new(0.3,self.tiles[row1][col1],{x = x2, y = y2})
     self.tweenGem2 = Tween.new(0.3,self.tiles[row2][col2],{x = x1, y = y1})
+end
+
+function Board:findHorizontalMatches()
+    local matches = {}
+    for i = 1, Board.MAXROWS do 
+        local same = 1
+        for j = 2, Board.MAXCOLS do
+            if self.tiles[i][j].type == self.tiles[i][j-1].type then
+                same = same +1
+            elseif same > 2 then -- match-3+
+                table.insert(matches,{row=i, col=(j-same), size=same})
+                same = 1
+            else -- different but no match-3
+                same = 1
+            end
+        end -- end for j
+
+        if same > 2 then
+            table.insert(matches,{row=i, col=(Board.MAXCOLS-same+1), size=same})
+            same = 1
+        end
+    end -- end for i
+
+    return matches
+end
+
+function Board:findVerticalMatches()
+    -- Almost the same func as findHorizontalMatches, bascially changing i for j
+    local matches = {}
+    for j = 1, Board.MAXCOLS do 
+        local same = 1
+        for i = 2, Board.MAXROWS do
+            if self.tiles[i][j].type == self.tiles[i-1][j].type then
+                same = same +1
+            elseif same > 2 then -- match-3+
+                table.insert(matches,{row=(i-same), col=j, size=same})
+                same = 1
+            else -- different but no match-3
+                same = 1
+            end
+        end -- end for j
+
+        if same > 2 then
+            table.insert(matches,{row=(Board.MAXROWS+1-same), col=j, size=same})
+            same = 1
+        end
+    end -- end for i
+
+    return matches
+end
+
+function Board:matches()
+    local horMatches = self:findHorizontalMatches()
+    local verMatches = self:findVerticalMatches() 
+
+    if #horMatches > 0 or #verMatches > 0 then
+        for k, match in pairs(horMatches) do
+            
+        end -- end for each horMatch
+        
+    end -- end if (has matches)
+end
+
+function Board:createExplosion(row,col)
 end
 
 return Board
