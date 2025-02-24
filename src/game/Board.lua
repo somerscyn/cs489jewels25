@@ -20,6 +20,7 @@ function Board:init(x,y)
             self.tiles[i][j] = self:createGem(i,j)
         end -- end for j
     end -- end for i
+    self:fixInitialMatrix()
 
     self.tweenGem1 = nil
     self.tweenGem2 = nil
@@ -30,6 +31,40 @@ function Board:createGem(row,col)
                self.y+(row-1)*Board.TILESIZE,
                math.random(4,8) )
 end
+
+function Board:fixInitialMatrix()
+    -- First we check horizontally
+    for i = 1, Board.MAXROWS do
+        local same = 1 
+        for j = 2, Board.MAXCOLS do -- pay attention: starts as j=2
+            if self.tiles[i][j].type == self.tiles[i][j-1].type then
+                same = same+1 -- counting same types
+                if same == 3 then -- match 3, fix it
+                    self.tiles[i][j]:nextType()
+                    same = 1
+                end
+            else
+                same = 1
+            end
+        end
+    end    
+
+    -- Second we check vertically
+    for j = 1, Board.MAXCOLS do -- pay attention: first loop is j
+        local same = 1 
+        for i = 2, Board.MAXROWS do -- second loop is i
+            if self.tiles[i][j].type == self.tiles[i-1][j].type then
+                same = same+1 -- counting same types
+                if same == 3 then -- match 3, fix it
+                    self.tiles[i][j]:nextType()
+                    same = 1
+                end
+            else
+                same = 1
+            end
+        end
+    end    
+end    
 
 function Board:update(dt)
     for i=1, Board.MAXROWS do
