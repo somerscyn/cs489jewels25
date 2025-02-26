@@ -47,10 +47,12 @@ function love.mousepressed(x, y, button, istouch)
     local gx, gy = Push:toGame(x,y)
     if button == 1 then -- regurlar mouse click
         board:mousepressed(gx,gy)
-    elseif button == 2 and love.keyboard.isDown("lctrl","rctrl") then
-        testexp:trigger(gx,gy)
-    elseif button == 2 and debugFlag then
-        board:cheatGem(gx,gy)
+    elseif debugFlag then
+        if button == 2 and love.keyboard.isDown("lctrl","rctrl") then
+           testexp:trigger(gx,gy)
+        elseif button == 2 then
+            board:cheatGem(gx,gy)
+        end
     end
 end
 
@@ -87,6 +89,9 @@ function love.draw()
 
     if testexp:isActive() then
         testexp:draw()
+    end
+    if debugFlag then
+        love.graphics.print("DEBUG ON",20,gameHeight-20)
     end
 
     Push:finish()
