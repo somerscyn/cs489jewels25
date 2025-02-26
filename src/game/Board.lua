@@ -26,6 +26,7 @@ function Board:init(x,y)
     self.tweenGem1 = nil
     self.tweenGem2 = nil
     self.explosions = {}
+    self.arrayFallTweens = {}
 end
 
 function Board:createGem(row,col)
@@ -216,13 +217,51 @@ function Board:matches()
 
     if #horMatches > 0 or #verMatches > 0 then
         for k, match in pairs(horMatches) do
-            
+            -- TODO: match logic
         end -- end for each horMatch
-        
+
     end -- end if (has matches)
 end
 
 function Board:createExplosion(row,col)
+    local exp = Explosion()
+    exp.trigger() -- TODO: missing x,y 
+    table.insert(self.explosions, exp) -- add exp to our array
 end
+
+function Board:shiftGems() 
+    for j = 1, Board.MAXCOLS do
+        for i = Board.MAXROWS, 2, -1 do -- find an empty space
+            if self.tiles[i][j] == nil then -- current pos is empty
+            -- seek a gem on top to move here
+                for k = i-1, 1, -1 do 
+                    if self.tiles[k][j] ~= nil then -- found a gem
+                        self.tiles[i][j] = self.tiles[k][j]
+                        self.tiles[k][j] = nil
+                        self:tweenGemFall(i,j) -- tween fall animation 
+                        break -- ends for k loop earlier
+                    end -- end if found gem
+                end -- end for k
+            end -- end if empty pos
+        end -- end for i
+    end -- end for j
+end -- end function
+
+function Board:tweenGemFall(row,col)
+    -- TODO: tween falling gem logic/anim
+end
+
+function Board:generateNewGems()
+    for j = 1, Board.MAXCOLS do
+        local topY = self.y-1*TileSize -- y pos above the first gem 
+        for i = Board.MAXROWS, 1, -1  do -- find an empty space
+            if self.tiles[i][j] == nil then -- empty, create new gem & tween 
+                self.tiles[i][j] = Gem(self.x+(j-1)*TileSize,topY, math.random(4,8))
+                self:tweenGemFall(i,j)
+                topY = topY - TileSize -- move y further up 
+            end -- end if empty space
+        end -- end for i
+    end -- end for j        
+end -- end function generateNewGems()
 
 return Board
