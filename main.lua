@@ -6,6 +6,7 @@ local Board = require "src.game.Board"
 local Border = require "src.game.Border"
 local Explosion = require "src.game.Explosion"
 local Sounds = require "src.game.SoundEffects"
+local Stats = require "src.game.Stats"
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -21,7 +22,8 @@ function love.load()
     gem1 = Gem(100,50,5)
     gem2 = Gem(500,50,6)
 
-    board = Board(140,80)
+    stats = Stats()
+    board = Board(140,80,stats)
     border = Border(110,50,380,380)
 
     testexp = Explosion()
@@ -62,6 +64,7 @@ function love.update(dt)
     bg1:update(dt)
     bg2:update(dt)
     testexp:update(dt)
+    stats:update(dt)
 
     if gameState == "start" then
 
@@ -118,7 +121,7 @@ function drawPlayState()
     board:draw()
 
     border:draw()
-
+    stats:draw()
 end
 
 function drawGameOverState()

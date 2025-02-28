@@ -11,9 +11,10 @@ local Board = Class{}
 Board.MAXROWS = 8
 Board.MAXCOLS = 8
 Board.TILESIZE = Gem.SIZE*Gem.SCALE 
-function Board:init(x,y)
+function Board:init(x,y, stats)
     self.x = x
     self.y = y
+    self.stats = stats
     self.cursor = Cursor(self.x,self.y,Board.TILESIZE+1)
 
     self.tiles = Matrix:new(Board.MAXROWS,Board.MAXCOLS)
@@ -238,9 +239,11 @@ end
 function Board:matches()
     local horMatches = self:findHorizontalMatches()
     local verMatches = self:findVerticalMatches() 
+    local score = 0
 
     if #horMatches > 0 or #verMatches > 0 then -- if there are matches
         for k, match in pairs(horMatches) do
+            score = score + 2^match.size * 10   
             for j=0, match.size-1 do
                 self.tiles[match.row][match.col+j] = nil
                 self:createExplosion(match.row,match.col+j)
@@ -248,6 +251,7 @@ function Board:matches()
         end -- end for each horMatch
 
         for k, match in pairs(verMatches) do
+            score = score + 2^match.size * 10   
             for i=0, match.size-1 do
                 self.tiles[match.row+i][match.col] = nil
                 self:createExplosion(match.row+i,match.col)
@@ -258,6 +262,8 @@ function Board:matches()
             Sounds["breakGems"]:stop()
         end
         Sounds["breakGems"]:play()
+
+        self.stats:addScore(score)
 
         self:shiftGems()
         self:generateNewGems()
