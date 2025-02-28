@@ -5,6 +5,7 @@ local Tween = require "libs.tween"
 local Gem = require "src.game.Gem"
 local Cursor = require "src.game.Cursor"
 local Explosion = require "src.game.Explosion"
+local Sounds = require "src.game.SoundEffects"
 
 local Board = Class{}
 Board.MAXROWS = 8
@@ -78,6 +79,25 @@ function Board:update(dt)
         end -- end for j
     end -- end for i
 
+    for k=#self.explosions, 1, -1 do
+        if self.explosions[k]:isActive() then
+            self.explosions[k]:update(dt)
+        else
+            table.remove(self.explosions, k)
+        end -- end if
+    end -- end for explosions
+
+    for k=#self.arrayFallTweens, 1, -1 do
+        if self.arrayFallTweens[k]:update(dt) then
+            -- the tween has completed its job
+            table.remove(self.arrayFallTweens, k)
+        end
+    end -- end for tween Falls
+
+    if #self.arrayFallTweens == 0 then
+        self:matches()
+    end
+
     if self.tweenGem1 ~= nil and self.tweenGem2~=nil then
         local completed1 = self.tweenGem1:update(dt)
         local completed2 = self.tweenGem2:update(dt)
@@ -103,6 +123,10 @@ function Board:draw()
     end -- end for i
 
     self.cursor:draw()
+
+    for k=1, #self.explosions do
+        self.explosions[k]:draw()
+    end
 end
 
 function Board:cheatGem(x,y)
@@ -215,17 +239,35 @@ function Board:matches()
     local horMatches = self:findHorizontalMatches()
     local verMatches = self:findVerticalMatches() 
 
-    if #horMatches > 0 or #verMatches > 0 then
+    if #horMatches > 0 or #verMatches > 0 then -- if there are matches
         for k, match in pairs(horMatches) do
-            -- TODO: match logic
+            for j=0, match.size-1 do
+                self.tiles[match.row][match.col+j] = nil
+                self:createExplosion(match.row,match.col+j)
+            end -- end for j 
         end -- end for each horMatch
 
+        for k, match in pairs(verMatches) do
+            for i=0, match.size-1 do
+                self.tiles[match.row+i][match.col] = nil
+                self:createExplosion(match.row+i,match.col)
+            end -- end for i 
+        end -- end for each verMatch
+
+        if Sounds["breakGems"]:isPlaying() then
+            Sounds["breakGems"]:stop()
+        end
+        Sounds["breakGems"]:play()
+
+        self:shiftGems()
+        self:generateNewGems()
     end -- end if (has matches)
 end
 
 function Board:createExplosion(row,col)
     local exp = Explosion()
-    exp.trigger() -- TODO: missing x,y 
+    exp:trigger(self.x+(col-1)*Board.TILESIZE+Board.TILESIZE/2,
+               self.y+(row-1)*Board.TILESIZE+Board.TILESIZE/2)  
     table.insert(self.explosions, exp) -- add exp to our array
 end
 
@@ -248,17 +290,19 @@ function Board:shiftGems()
 end -- end function
 
 function Board:tweenGemFall(row,col)
-    -- TODO: tween falling gem logic/anim
+    local tweenFall = Tween.new(0.5,self.tiles[row][col],
+            {y = self.y+(row-1)*Board.TILESIZE})
+    table.insert(self.arrayFallTweens, tweenFall)
 end
 
 function Board:generateNewGems()
     for j = 1, Board.MAXCOLS do
-        local topY = self.y-1*TileSize -- y pos above the first gem 
+        local topY = self.y-1*Board.TILESIZE -- y pos above the first gem 
         for i = Board.MAXROWS, 1, -1  do -- find an empty space
             if self.tiles[i][j] == nil then -- empty, create new gem & tween 
-                self.tiles[i][j] = Gem(self.x+(j-1)*TileSize,topY, math.random(4,8))
+                self.tiles[i][j] = Gem(self.x+(j-1)*Board.TILESIZE,topY, math.random(4,8))
                 self:tweenGemFall(i,j)
-                topY = topY - TileSize -- move y further up 
+                topY = topY - Board.TILESIZE -- move y further up 
             end -- end if empty space
         end -- end for i
     end -- end for j        

@@ -5,6 +5,7 @@ local Gem = require "src.game.Gem"
 local Board = require "src.game.Board"
 local Border = require "src.game.Border"
 local Explosion = require "src.game.Explosion"
+local Sounds = require "src.game.SoundEffects"
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
