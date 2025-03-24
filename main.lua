@@ -42,6 +42,19 @@ function love.keypressed(key)
         debugFlag = not debugFlag
     elseif key == "return" and gameState=="start" then
         gameState = "play"
+    elseif key == "return" and gameState=="over" then
+        gameState = "start"
+        bg1 = Background("graphics/bg/background1.png",30)
+        bg2 = Background("graphics/bg/background2.png",60)
+    
+        gem1 = Gem(100,50,5)
+        gem2 = Gem(500,50,6)
+    
+        stats = Stats()
+        board = Board(140,80,stats)
+        border = Border(110,50,380,380)
+    
+        testexp = Explosion()
     end
 end
 

@@ -10,7 +10,7 @@ function Stats:init()
     self.level = 1 -- current level    
     self.totalScore = 0 -- total score so far
     self.targetScore = 1000
-    self.maxSecs = 10 -- max seconds for the level
+    self.maxSecs = 3 -- max seconds for the level
     self.elapsedSecs = 0 -- elapsed seconds
     self.timeOut = false -- when time is out
     self.tweenLevel = nil -- for later
@@ -25,7 +25,9 @@ function Stats:draw()
 end
     
 function Stats:update(dt) -- for now, empty function
-    self.elapsedSecs = self.elapsedSecs + dt
+    if gameState=="play"then
+        self.elapsedSecs = self.elapsedSecs + dt
+    end
     if self.elapsedSecs > self.maxSecs then
         gameState = "over"
     end
