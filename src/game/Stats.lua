@@ -2,6 +2,8 @@ local Class = require "libs.hump.class"
 local Timer = require "libs.hump.timer"
 local Tween = require "libs.tween"
 local Sounds = require "src.game.SoundEffects"
+local Board = require "src.game.Board"
+
 
 
 local statFont = love.graphics.newFont(26)
@@ -11,7 +13,7 @@ function Stats:init()
     self.y = 10 -- we will need it for tweening later
     self.level = 1 -- current level    
     self.totalScore = 0 -- total score so far
-    self.targetScore = 1000
+    self.targetScore = 80
     self.maxSecs = 100 -- max seconds for the level
     self.elapsedSecs = 0 -- elapsed seconds
     self.timeOut = false -- when time is out
@@ -48,6 +50,7 @@ function Stats:levelUp()
     Sounds["levelUp"]:play()
     self.targetScore = self.targetScore+self.level*1000
     self.elapsedSecs = 0
+    board = Board(140,80,stats)
 end
     
 return Stats

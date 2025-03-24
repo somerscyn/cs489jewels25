@@ -245,6 +245,9 @@ function Board:matches()
         for k, match in pairs(horMatches) do
             score = score + 2^match.size * 10   
             for j=0, match.size-1 do
+                if self.tiles[match.row][match.col+j].type == 4 then
+                    Explosion:setColor(255,0,0)
+                end
                 self.tiles[match.row][match.col+j] = nil
                 self:createExplosion(match.row,match.col+j)
             end -- end for j 
