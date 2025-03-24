@@ -25,6 +25,10 @@ function Stats:draw()
 end
     
 function Stats:update(dt) -- for now, empty function
+    self.elapsedSecs = self.elapsedSecs + dt
+    if self.elapsedSecs > self.maxSecs then
+        self.timeOut = true
+    end
 end
 
 function Stats:addScore(n)
