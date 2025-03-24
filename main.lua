@@ -84,6 +84,8 @@ function love.update(dt)
         gem1:update(dt)
         gem2:update(dt)
     elseif gameState == "play" then
+        Sounds["playStateMusic"]:play()
+        Sounds["playStateMusic"]:setLooping(true)
         board:update(dt)
 
     elseif gameState == "over" then

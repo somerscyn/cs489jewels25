@@ -10,7 +10,7 @@ function Stats:init()
     self.level = 1 -- current level    
     self.totalScore = 0 -- total score so far
     self.targetScore = 1000
-    self.maxSecs = 3 -- max seconds for the level
+    self.maxSecs = 99 -- max seconds for the level
     self.elapsedSecs = 0 -- elapsed seconds
     self.timeOut = false -- when time is out
     self.tweenLevel = nil -- for later
