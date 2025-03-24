@@ -236,6 +236,22 @@ function Board:findVerticalMatches()
     return matches
 end
 
+function Board:getGemColor(gemType)
+    if gemType == 4 then
+        return {255,0,0}
+    elseif gemType == 5 then
+        return {0,255,0}
+    elseif gemType == 6 then
+        return {0,0,255}
+    elseif gemType == 7 then
+        return {255,255,0}
+    elseif gemType == 8 then
+        return {255,0,255}
+    else
+        return {255,255,255}
+    end
+end
+
 function Board:matches()
     local horMatches = self:findHorizontalMatches()
     local verMatches = self:findVerticalMatches() 
@@ -245,19 +261,20 @@ function Board:matches()
         for k, match in pairs(horMatches) do
             score = score + 2^match.size * 10   
             for j=0, match.size-1 do
-                if self.tiles[match.row][match.col+j].type == 4 then
-                    Explosion:setColor(255,0,0)
-                end
+                gemType = self.tiles[match.row][match.col+j].type
+                gemColor = self:getGemColor(gemType)
                 self.tiles[match.row][match.col+j] = nil
-                self:createExplosion(match.row,match.col+j)
+                self:createExplosion(match.row,match.col+j, gemColor)
             end -- end for j 
         end -- end for each horMatch
 
         for k, match in pairs(verMatches) do
             score = score + 2^match.size * 10   
             for i=0, match.size-1 do
+                gemType = self.tiles[match.row+i][match.col].type
+                gemColor = self:getGemColor(gemType)
                 self.tiles[match.row+i][match.col] = nil
-                self:createExplosion(match.row+i,match.col)
+                self:createExplosion(match.row+i,match.col, gemColor)
             end -- end for i 
         end -- end for each verMatch
 
@@ -273,11 +290,12 @@ function Board:matches()
     end -- end if (has matches)
 end
 
-function Board:createExplosion(row,col)
+function Board:createExplosion(row,col, color)
     local exp = Explosion()
     exp:trigger(self.x+(col-1)*Board.TILESIZE+Board.TILESIZE/2,
                self.y+(row-1)*Board.TILESIZE+Board.TILESIZE/2)  
     table.insert(self.explosions, exp) -- add exp to our array
+    Explosion:setColor(unpack(color))
 end
 
 function Board:shiftGems() 
