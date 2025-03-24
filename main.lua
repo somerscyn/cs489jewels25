@@ -89,6 +89,7 @@ function love.update(dt)
         board:update(dt)
 
     elseif gameState == "over" then
+        Sounds["playStateMusic"]:stop()
         -- for later, if we needed
     end
 end
