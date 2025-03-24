@@ -129,4 +129,8 @@ function drawGameOverState()
         gameWidth,"center")
     love.graphics.printf("Press Enter to Play or Escape to exit",
         0,90, gameWidth,"center")
+    love.graphics.printf("Your Score: "..tostring(stats.totalScore),
+        0,130, gameWidth,"center")
+    love.graphics.printf("Your Level: "..tostring(stats.level),
+        0,170, gameWidth,"center")
 end

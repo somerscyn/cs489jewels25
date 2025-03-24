@@ -10,7 +10,7 @@ function Stats:init()
     self.level = 1 -- current level    
     self.totalScore = 0 -- total score so far
     self.targetScore = 1000
-    self.maxSecs = 99 -- max seconds for the level
+    self.maxSecs = 10 -- max seconds for the level
     self.elapsedSecs = 0 -- elapsed seconds
     self.timeOut = false -- when time is out
     self.tweenLevel = nil -- for later
@@ -19,7 +19,7 @@ end
 function Stats:draw()
     love.graphics.setColor(1,0,1) -- Magenta
     love.graphics.printf("Level "..tostring(self.level), statFont, gameWidth/2-60,self.y,100,"center")
-    love.graphics.printf("Time "..tostring(self.elapsedSecs).."/"..tostring(self.maxSecs), statFont,10,10,200)
+    love.graphics.printf("Time "..tostring(math.floor(self.elapsedSecs)).."/"..tostring(self.maxSecs), statFont,10,10,200)
     love.graphics.printf("Score "..tostring(self.totalScore), statFont,gameWidth-210,10,200,"right")
     love.graphics.setColor(1,1,1) -- White
 end
@@ -27,7 +27,7 @@ end
 function Stats:update(dt) -- for now, empty function
     self.elapsedSecs = self.elapsedSecs + dt
     if self.elapsedSecs > self.maxSecs then
-        self.timeOut = true
+        gameState = "over"
     end
 end
 
