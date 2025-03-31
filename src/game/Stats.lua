@@ -51,6 +51,11 @@ function Stats:levelUp()
     self.targetScore = self.targetScore+self.level*1000
     self.elapsedSecs = 0
     board = Board(140,80,stats)
+    -- below code is for later for tween
+   -- board = Board(140, -100, stats)
+  --  local tweenFall = Tween.new(0.5,self.tiles[row][col],{y = 80}, 'outQuad')
+  --  tweenFall(0.5, board, {y = 80}, 'outQuad')
+
 end
     
 return Stats

@@ -292,10 +292,10 @@ end
 
 function Board:createExplosion(row,col, color)
     local exp = Explosion()
+    exp:setColor(unpack(color))
     exp:trigger(self.x+(col-1)*Board.TILESIZE+Board.TILESIZE/2,
                self.y+(row-1)*Board.TILESIZE+Board.TILESIZE/2)  
     table.insert(self.explosions, exp) -- add exp to our array
-    Explosion:setColor(unpack(color))
 end
 
 function Board:shiftGems() 
