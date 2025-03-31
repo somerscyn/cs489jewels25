@@ -27,6 +27,7 @@ function Board:init(x,y, stats)
 
     self.tweenGem1 = nil
     self.tweenGem2 = nil
+    self.tweenBoard = nil
     self.explosions = {}
     self.arrayFallTweens = {}
 end
@@ -210,6 +211,22 @@ function Board:findHorizontalMatches()
 
     return matches
 end
+
+function Board:dropGems()
+    self.arrayFallTweens = {}
+
+    for row = 1, #self.tiles do
+        for col = 1, #self.tiles[row] do
+            local gem = self.tiles[row][col]
+            if gem then
+                local targetY = love.graphics.getHeight() + 50 
+                local tween = Tween.new(0.5 + row * 0.03, gem, { y = targetY }, "inQuad")
+                table.insert(self.arrayFallTweens, tween)
+            end
+        end
+    end
+end
+
 
 function Board:findVerticalMatches()
     -- Almost the same func as findHorizontalMatches, bascially changing i for j

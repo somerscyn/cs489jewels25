@@ -48,9 +48,16 @@ end
 function Stats:levelUp()
     self.level = self.level +1
     Sounds["levelUp"]:play()
+
     self.targetScore = self.targetScore+self.level*1000
     self.elapsedSecs = 0
+
+
+    --board:dropGems()
+
     board = Board(140,80,stats)
+
+
     -- below code is for later for tween
    -- board = Board(140, -100, stats)
   --  local tweenFall = Tween.new(0.5,self.tiles[row][col],{y = 80}, 'outQuad')
