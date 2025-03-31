@@ -238,15 +238,15 @@ end
 
 function Board:getGemColor(gemType)
     if gemType == 4 then
-        return {255,0,0}
+        return {255,190,0}
     elseif gemType == 5 then
-        return {0,255,0}
-    elseif gemType == 6 then
         return {0,0,255}
+    elseif gemType == 6 then
+        return {196,196,196}
     elseif gemType == 7 then
-        return {255,255,0}
+        return {255,0,0}
     elseif gemType == 8 then
-        return {255,0,255}
+        return {0,255,0}
     else
         return {255,255,255}
     end

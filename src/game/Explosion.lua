@@ -16,7 +16,7 @@ function Explosion:init()
 end
 
 function Explosion:setColor(r,g,b) -- sets the particle color
-    r, g, b = r / 255, g / 255, b / 255
+    --r, g, b = r / 255, g / 255, b / 255
     self.particleSystem:setColors(r,g,b,1,r,g,b,0)
 end
 
