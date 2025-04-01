@@ -3,6 +3,9 @@ local Timer = require "libs.hump.timer"
 local Tween = require "libs.tween"
 local Sounds = require "src.game.SoundEffects"
 local Board = require "src.game.Board"
+local FloatText = require "src.game.FloatText"
+
+local floatText = FloatText("Levelled up!", 200, 300)
 
 local statFont = love.graphics.newFont(26)
 
@@ -24,9 +27,12 @@ function Stats:draw()
     love.graphics.printf("Time "..tostring(math.floor(self.elapsedSecs)).."/"..tostring(self.maxSecs), statFont,10,10,200)
     love.graphics.printf("Score "..tostring(self.totalScore), statFont,gameWidth-210,10,200,"right")
     love.graphics.setColor(1,1,1) -- White
+    --love.graphics.print(floatText.text, floatText.x, floatText.y)
+    
 end
     
 function Stats:update(dt) -- for now, empty function
+    floatText:update(dt)
     if gameState=="play"then
         self.elapsedSecs = self.elapsedSecs + dt
     end
@@ -51,18 +57,10 @@ function Stats:levelUp()
     self.targetScore = self.targetScore+self.level*1000
     self.elapsedSecs = 0
 
-
-    --board:dropGems()
-
-    board = Board(140,80,stats)
-
-
-    -- below code is for later for tween
-    --board = Board(140, -100, stats)
-  --  local tweenFall = Tween.new(0.5,self.tiles[row][col],{y = 80}, 'outQuad')
-  --  tweenFall(0.5, board, {y = 80}, 'outQuad')
-   -- Timer.tween(0.5, board, { y = 80 }, Timer.outQuad)
-
+    floatText:tween(200, 250)
+    floatText:draw()
+   
+    --board = Board(140,80,stats)
 end
     
 return Stats

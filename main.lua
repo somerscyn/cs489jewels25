@@ -7,6 +7,8 @@ local Border = require "src.game.Border"
 local Explosion = require "src.game.Explosion"
 local Sounds = require "src.game.SoundEffects"
 local Stats = require "src.game.Stats"
+local FloatText = require "src.game.FloatText"
+
 
 -- Load is executed only once; used to setup initial resource for your game
 function love.load()
@@ -27,6 +29,7 @@ function love.load()
     border = Border(110,50,380,380)
 
     testexp = Explosion()
+    floatText = FloatText("Levelled up!", 200, 300)
 end
 
 -- When the game window resizes
@@ -79,6 +82,7 @@ function love.update(dt)
     bg2:update(dt)
     testexp:update(dt)
     stats:update(dt)
+    floatText:update(dt)
 
     if gameState == "start" then
 

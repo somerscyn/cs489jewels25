@@ -6,6 +6,8 @@ local Gem = require "src.game.Gem"
 local Cursor = require "src.game.Cursor"
 local Explosion = require "src.game.Explosion"
 local Sounds = require "src.game.SoundEffects"
+local FloatText = require "src.game.FloatText"
+
 
 local Board = Class{}
 Board.MAXROWS = 8
