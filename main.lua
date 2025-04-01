@@ -60,6 +60,7 @@ end
 
 -- Event to handle mouse pressed (there is another for mouse release)
 function love.mousepressed(x, y, button, istouch)
+    board.comboCount = 0 -- reset combo count
     local gx, gy = Push:toGame(x,y)
     if button == 1 then -- regurlar mouse click
         board:mousepressed(gx,gy)

@@ -17,6 +17,8 @@ function Board:init(x,y, stats)
     self.stats = stats
     self.cursor = Cursor(self.x,self.y,Board.TILESIZE+1)
 
+    self.comboCount = 0
+
     self.tiles = Matrix:new(Board.MAXROWS,Board.MAXCOLS)
     for i=1, Board.MAXROWS do
         for j=1, Board.MAXCOLS do
@@ -250,6 +252,7 @@ function Board:findVerticalMatches()
         end
     end -- end for i
 
+
     return matches
 end
 
@@ -272,11 +275,15 @@ end
 function Board:matches()
     local horMatches = self:findHorizontalMatches()
     local verMatches = self:findVerticalMatches() 
+
+
     local score = 0
 
     if #horMatches > 0 or #verMatches > 0 then -- if there are matches
         for k, match in pairs(horMatches) do
-            score = score + 2^match.size * 10   
+            self.comboCount = self.comboCount + 10
+            score = score + self.comboCount + 2^match.size * 10
+            print(score, self.comboCount)
             for j=0, match.size-1 do
                 gemType = self.tiles[match.row][match.col+j].type
                 gemColor = self:getGemColor(gemType)
@@ -286,7 +293,9 @@ function Board:matches()
         end -- end for each horMatch
 
         for k, match in pairs(verMatches) do
-            score = score + 2^match.size * 10   
+            self.comboCount = self.comboCount + 10
+            score = score + self.comboCount + 2^match.size * 10
+            print(score, self.comboCount)
             for i=0, match.size-1 do
                 gemType = self.tiles[match.row+i][match.col].type
                 gemColor = self:getGemColor(gemType)

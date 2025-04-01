@@ -58,10 +58,10 @@ function Stats:levelUp()
 
 
     -- below code is for later for tween
-    board = Board(140, -100, stats)
+    --board = Board(140, -100, stats)
   --  local tweenFall = Tween.new(0.5,self.tiles[row][col],{y = 80}, 'outQuad')
   --  tweenFall(0.5, board, {y = 80}, 'outQuad')
-    Timer.tween(0.5, board, { y = 80 }, Timer.outQuad)
+   -- Timer.tween(0.5, board, { y = 80 }, Timer.outQuad)
 
 end
     
