@@ -9,7 +9,7 @@ local Sounds = require "src.game.SoundEffects"
 local FloatText = require "src.game.FloatText"
 local ComboText = require "src.game.comboText"
 
-comboText = comboText("Combo!", gameWidth/2-200, gameHeight/2-50)
+comboText = ComboText("Combo!", gameWidth/2-200, gameHeight/2-50)
 
 local Board = Class{}
 Board.MAXROWS = 8
