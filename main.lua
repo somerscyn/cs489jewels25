@@ -8,6 +8,8 @@ local Explosion = require "src.game.Explosion"
 local Sounds = require "src.game.SoundEffects"
 local Stats = require "src.game.Stats"
 local FloatText = require "src.game.FloatText"
+local comboText = require "src.game.comboText"
+
 
 
 -- Load is executed only once; used to setup initial resource for your game

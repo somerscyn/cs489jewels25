@@ -5,7 +5,7 @@ local Sounds = require "src.game.SoundEffects"
 local Board = require "src.game.Board"
 local FloatText = require "src.game.FloatText"
 
-local floatText = FloatText("Levelled up!", 200, 300)
+local floatText = FloatText("Leveled up!", 200, 300)
 
 local statFont = love.graphics.newFont(26)
 

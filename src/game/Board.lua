@@ -7,7 +7,9 @@ local Cursor = require "src.game.Cursor"
 local Explosion = require "src.game.Explosion"
 local Sounds = require "src.game.SoundEffects"
 local FloatText = require "src.game.FloatText"
+local ComboText = require "src.game.comboText"
 
+comboText = comboText("Combo!", gameWidth/2-200, gameHeight/2-50)
 
 local Board = Class{}
 Board.MAXROWS = 8
@@ -280,11 +282,16 @@ function Board:matches()
 
 
     local score = 0
+    self.comboCount = self.comboCount + 1
+    if self.comboCount > 0 then
+        comboText:draw()
+        comboText:tween(self.y-50)
+    end
+
 
     if #horMatches > 0 or #verMatches > 0 then -- if there are matches
         for k, match in pairs(horMatches) do
-            self.comboCount = self.comboCount + 10
-            score = score + self.comboCount + 2^match.size * 10
+            score = score * self.comboCount + 2^match.size * 10
             print(score, self.comboCount)
             for j=0, match.size-1 do
                 gemType = self.tiles[match.row][match.col+j].type
@@ -296,8 +303,7 @@ function Board:matches()
 
         for k, match in pairs(verMatches) do
             self.comboCount = self.comboCount + 10
-            score = score + self.comboCount + 2^match.size * 10
-            print(score, self.comboCount)
+            score = score * self.comboCount + 2^match.size * 10
             for i=0, match.size-1 do
                 gemType = self.tiles[match.row+i][match.col].type
                 gemColor = self:getGemColor(gemType)
