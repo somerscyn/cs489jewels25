@@ -27,6 +27,7 @@ function Stats:draw()
     love.graphics.printf("Time "..tostring(math.floor(self.elapsedSecs)).."/"..tostring(self.maxSecs), statFont,10,10,200)
     love.graphics.printf("Score "..tostring(self.totalScore), statFont,gameWidth-210,10,200,"right")
     love.graphics.setColor(1,1,1) -- White
+    floatText:draw()
     --love.graphics.print(floatText.text, floatText.x, floatText.y)
     
 end
@@ -57,9 +58,8 @@ function Stats:levelUp()
     self.targetScore = self.targetScore+self.level*1000
     self.elapsedSecs = 0
 
-    floatText:tween(200, 250)
-    floatText:draw()
-   
+    floatText:tween(-100) -- move the float text up
+    floatText:reset() -- reset the float text position
     --board = Board(140,80,stats)
 end
     
